@@ -4,26 +4,26 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    // Duration (in seconds) before the bullet is automatically destroyed
-    public float life = 3;
+    public float speed;
+    private Rigidbody2D rb;
 
-    void Awake()
+    // Start is called before the first frame update
+    void Start()
     {
-        // Schedule the bullet to be destroyed after its life duration
-        Destroy(gameObject, life);
+        rb = GetComponent<Rigidbody2D>();
+        rb.velocity = transform.right * speed;
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    // Detect collision with objects that have a collider marked as a trigger
+    void OnTriggerEnter2D(Collider2D other)
     {
-        // Check if the collided object is tagged as "Enemy"
-        // or if it has the name "Obsticle"
-        if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.name == "Obsticle")
+        // Check if the object hit has the "Enemy" tag
+        if (other.CompareTag("Enemy"))
         {
-            // Destroy the enemy or obstacle upon collision
-            Destroy(collision.gameObject);
+            // Destroy both the bullet and the enemy
+            Destroy(gameObject);  // Destroy the bullet
+            Destroy(other.gameObject);  // Destroy the enemy
+            // 
         }
-
-        // Destroy the bullet regardless of what it collides with
-        Destroy(gameObject);
     }
 }
